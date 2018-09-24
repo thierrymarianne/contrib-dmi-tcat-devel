@@ -2,7 +2,7 @@ FROM ubuntu:16.04
 
 RUN apt-get update && apt-get install openssl wget php-xdebug iputils-ping -fy
 
-ADD scripts /scripts
+ADD build /scripts
 
 ARG TWITTER_CONSUMER_KEY
 ARG TWITTER_CONSUMER_SECRET
