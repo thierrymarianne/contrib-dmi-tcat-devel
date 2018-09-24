@@ -2,8 +2,6 @@ FROM ubuntu:16.04
 
 RUN apt-get update && apt-get install openssl wget php-xdebug iputils-ping -fy
 
-RUN mkdir /etc/cron.d && touch /etc/crontab
-
 ADD scripts /scripts
 
 ARG TWITTER_CONSUMER_KEY
@@ -34,7 +32,7 @@ ENV TCAT_ADMIN_PASSWORD=$TCAT_ADMIN_PASSWORD
 ENV TCAT_SELF_UPDATE=$TCAT_SELF_UPDATE
 ENV STATUS_CAPTURE_MODE=$STATUS_CAPTURE_MODE
 
-RUN /scripts/tcat-install-linux.sh
+RUN touch /etc/crontab && /scripts/tcat-install-linux.sh
 
 CMD ["/bin/bash"]
 
