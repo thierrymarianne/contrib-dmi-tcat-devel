@@ -1,0 +1,8 @@
+/config.php
+/querybins.php
+/followbins.php
+analysis/cache/
+logs
+proc
+.htaccess
+*~
