@@ -18,22 +18,13 @@
 # Run with -h for help.
 #
 # Supported distributions:
-# - Ubuntu 14.04
-# - Ubuntu 15.04
-# - Ubuntu 15.10
-# - Ubuntu 16.04
-# - Ubuntu 16.10
-# - Ubuntu 17.04
-# - Ubuntu 17.10
-# - Debian 8.*
-# - Debian 9.*
-#
+# - Ubuntu 16.04 (from official docker image)
 #----------------------------------------------------------------
 
 # TCAT Installer parameters
 
 # Convention for Boolean: 'y' true; all other values (e.g. blank or 'n') false
-source ./credentials.sh
+source /scripts/credentials.sh
 
 # End of TCAT installer parameters
 
@@ -222,7 +213,7 @@ eval set -- $ARGS
 
 ## Process parsed options
 
-BATCH_MODE=
+BATCH_MODE=y
 CONFIG_FILE=
 GEO_SEARCH=y
 CMD_SERVERNAME=
@@ -282,9 +273,9 @@ fi
 # Script run with root privileges (either as root or with sudo)
 
 if [ $(id -u) -ne 0 ]; then
-   tput setaf 1
+   tput -T screen-256color setaf 1
    echo "$PROG: error: this script was run without root privileges" 1>&2
-   tput sgr0
+   tput -T screen-256color sgr0
    exit 1
 fi
 
@@ -296,60 +287,38 @@ if [ $OS != 'Linux' ]; then
     exit 1
 fi
 
-if [ "Ubuntu" = 'Ubuntu' ]; then
-    UBUNTU_VERSION='16.04'
-    DEBIAN_VERSION=
-    UBUNTU_VERSION_MAJOR=$(echo $UBUNTU_VERSION |
-	awk -F . '{if (match($1, /^[0-9]+$/)) print $1}')
 
-    if [ -z "$UBUNTU_VERSION_MAJOR" ]; then
-	echo "$PROG: error: unexpected Ubuntu version: $UBUNTU_VERSION" >&2
-	exit 1
+UBUNTU_VERSION='16.04'
+DEBIAN_VERSION=
+UBUNTU_VERSION_MAJOR=$(echo $UBUNTU_VERSION |
+awk -F . '{if (match($1, /^[0-9]+$/)) print $1}')
+
+if [ -z "$UBUNTU_VERSION_MAJOR" ]; then
+    echo "$PROG: error: unexpected Ubuntu version: $UBUNTU_VERSION" >&2
+    exit 1
     fi
     if [ "$UBUNTU_VERSION" != '14.04' -a "$UBUNTU_VERSION" != '15.04' -a "$UBUNTU_VERSION" != '15.10' -a "$UBUNTU_VERSION" != '16.04' -a "$UBUNTU_VERSION" != '16.10' -a "$UBUNTU_VERSION" != '17.04' ]; then
-	if [ -z "$FORCE_INSTALL" ]; then
-	    echo "$PROG: error: unsupported distribution: Ubuntu $UBUNTU_VERSION" >&2
-	    exit 1
-	fi
+    if [ -z "$FORCE_INSTALL" ]; then
+        echo "$PROG: error: unsupported distribution: Ubuntu $UBUNTU_VERSION" >&2
+        exit 1
     fi
+fi
 
-    if [ "$UBUNTU_VERSION_MAJOR" -lt 15 ]; then
-	echo "Warning: no geographical search on Ubuntu $UBUNTU_VERSION < 15.x"
+if [ "$UBUNTU_VERSION_MAJOR" -lt 15 ]; then
+    echo "Warning: no geographical search on Ubuntu $UBUNTU_VERSION < 15.x"
 
-	if [ "$GEO_SEARCH" = 'y' ]; then
-	    if [ "$BATCH_MODE" = 'y' ]; then
-		echo "$PROG: aborted (use -G to leave out geo search)" >&2
-		exit 1
-	    else
-		if ! promptYN "Continue install without geographical search";
-		then
-		    echo "$PROG: aborted by user"
-		    exit 1
-		fi
-	    fi
-	fi
+    if [ "$GEO_SEARCH" = 'y' ]; then
+        if [ "$BATCH_MODE" = 'y' ]; then
+        echo "$PROG: aborted (use -G to leave out geo search)" >&2
+        exit 1
+        else
+        if ! promptYN "Continue install without geographical search";
+        then
+            echo "$PROG: aborted by user"
+            exit 1
+        fi
+        fi
     fi
-
-elif [ "$DISTRIBUTION_ID" = 'Debian' ]; then
-    DEBIAN_VERSION=`lsb_release -r -s`
-    UBUNTU_VERSION=
-    DEBIAN_VERSION_MAJOR=$(echo $DEBIAN_VERSION |
-	awk -F . '{if (match($1, /^[0-9]+$/)) print $1}')
-
-    if [ -z "$DEBIAN_VERSION" ]; then
-	echo "$PROG: error: unexpected Debian version: $DEBIAN_VERSION" >&2
-	exit 1
-    fi
-    if [ "$DEBIAN_VERSION_MAJOR" != '8' -a "$DEBIAN_VERSION_MAJOR" != '9' ]; then
-	if [ -z "$FORCE_INSTALL" ]; then
-	    echo "$PROG: error: unsupported distribution: Debian $DEBIAN_VERSION" >&2
-	    exit 1
-	fi
-    fi
-
-else
-    echo "$PROG: error: unsupported distribution: $DISTRIBUTION_ID" >&2
-    exit 1
 fi
 
 # Already installed?
@@ -512,9 +481,9 @@ while [ "$BATCH_MODE" != "y" ]; do
 	echo "    TCAT admin login name: $TCATADMINUSER"
 	echo "    TCAT standard login name: $TCATUSER"
 	echo
-	if promptYN "Use these values (or \"q\" to quit)"; then
-	    break; # exit while-loop to start installing
-	fi
+#	if promptYN "Use these values (or \"q\" to quit)"; then
+#	    break; # exit while-loop to start installing
+#	fi
 	echo
     fi
 
@@ -548,7 +517,6 @@ while [ "$BATCH_MODE" != "y" ]; do
     fi
 
     DEFAULT=$CAPTURE_MODE
-    CAPTURE_MODE=
     while [ -z "$CAPTURE_MODE" ]; do
 	read -p "Tweet capture mode (1=phrases/keywords, 2=users, 3=1% traffic) [$DEFAULT]: " CAPTURE_MODE
 	if [ -z "$CAPTURE_MODE" ]; then
@@ -590,7 +558,6 @@ while [ "$BATCH_MODE" != "y" ]; do
     fi
 
     DEFAULT=$SERVERNAME
-    SERVERNAME=
     while [ -z "$SERVERNAME" ]; do
 	PROMPT="Server name (hostname or IP address)"
 	if [ -n "$DEFAULT" ]; then
@@ -624,9 +591,7 @@ while [ "$BATCH_MODE" != "y" ]; do
     fi
 
     DEFAULT=$TCAT_AUTO_UPDATE
-    TCAT_AUTO_UPDATE=
     while [ -z "$TCAT_AUTO_UPDATE" ]; do
-	read -p "Automatically upgrade TCAT (0=off, 1=trivial,2=substantial,3=expensive) [$DEFAULT]: " TCAT_AUTO_UPDATE
 	if [ -z "$TCAT_AUTO_UPDATE" ]; then
 	    TCAT_AUTO_UPDATE=$DEFAULT
 	fi
@@ -866,9 +831,9 @@ sed -i 's/^.*cd \/var\/www\/dmi-tcat\/helpers; sh urlexpand.sh.*$//g' /etc/cront
 #----------------------------------------------------------------
 
 if [ "$DO_UPDATE_UPGRADE" = 'y' ]; then
-    tput bold
+    tput -T screen-256color bold
     echo "Updating and upgrading ..."
-    tput sgr0
+    tput -T screen-256color sgr0
     echo ""
 
     apt-get update
@@ -889,9 +854,9 @@ fi
 
 #----------------------------------------------------------------
 echo
-tput bold
+tput -T screen-256color bold
 echo "Installing MySQL server and Apache webserver ..."
-tput sgr0
+tput -T screen-256color sgr0
 echo ""
 
 # Set MySQL root password to avoid prompt during "apt-get install" MySQL server
@@ -1028,9 +993,9 @@ else
 fi
 
 echo ""
-tput bold
+tput -T screen-256color bold
 echo "Downloading DMI-TCAT from github ..."
-tput sgr0
+tput -T screen-256color sgr0
 echo ""
 
 if [ -z "$TCAT_GIT_BRANCH" ]; then
@@ -1053,9 +1018,9 @@ echo "Using branch/tag $TCAT_GIT_BRANCH"
 git -C "$TCAT_DIR" checkout "$TCAT_GIT_BRANCH"
 
 echo ""
-tput bold
+tput -T screen-256color bold
 echo "Preliminary DMI-TCAT configuration ..."
-tput sgr0
+tput -T screen-256color sgr0
 echo ""
 
 # Create unix user and group, if needed
@@ -1080,9 +1045,9 @@ chmod 755 logs
 chmod 755 proc
 
 echo ""
-tput bold
+tput -T screen-256color bold
 echo "Configuring Apache 2 ..."
-tput sgr0
+tput -T screen-256color sgr0
 echo ""
 
 # Save Web UI passwords
@@ -1187,9 +1152,9 @@ else
 fi
 
 echo ""
-tput bold
+tput -T screen-256color bold
 echo "Configuring MySQL server for TCAT ..."
-tput sgr0
+tput -T screen-256color sgr0
 echo ""
 
 # Save passwords in MySQL defaults-file format
@@ -1240,9 +1205,9 @@ sed -i "s/example.com\/dmi-tcat\//$SERVERNAME\//g" "$CFG"
 
 if [ "$URLEXPANDYES" = 'y' ]; then
    echo ""
-   tput bold
+   tput -T screen-256color bold
    echo "Enabling URL expander ..."
-   tput sgr0
+   tput -T screen-256color sgr0
    echo ""
    VAR=ENABLE_URL_EXPANDER
    VALUE="TRUE"
@@ -1250,9 +1215,9 @@ if [ "$URLEXPANDYES" = 'y' ]; then
 fi
 
 echo ""
-tput bold
+tput -T screen-256color bold
 echo "Activating TCAT controller in cron ..."
-tput sgr0
+tput -T screen-256color sgr0
 echo ""
 
 CRONLINE="* *     * * *   $SHELLUSER   (cd \"$TCAT_DIR/capture/stream\"; php controller.php)"
@@ -1261,9 +1226,9 @@ echo "# Run TCAT controller every minute" >> /etc/cron.d/tcat
 echo "$CRONLINE" >> /etc/cron.d/tcat
 
 echo ""
-tput bold
+tput -T screen-256color bold
 echo "Setting up logfile rotation ..."
-tput sgr0
+tput -T screen-256color sgr0
 echo ""
 
 cat > /etc/logrotate.d/dmi-tcat <<EOF
@@ -1335,9 +1300,9 @@ if debsums -ce | grep "/etc/mysql/mysql.cnf" >/dev/null; then
 
     if [ "$DB_CONFIG_MEMORY_PROFILE" = "y" ]; then
         echo ""
-        tput bold
+        tput -T screen-256color bold
         echo "Attempting to adjust MySQL server profile ..."
-        tput sgr0
+        tput -T screen-256color sgr0
         echo ""
         MAXMEM=`free -m | head -n 2 | tail -n 1 | tr -s ' ' | cut -d ' ' -f 2`
         # Make this an integer, and non-empty for bash
@@ -1394,9 +1359,9 @@ if debsums -ce | grep "/etc/mysql/mysql.cnf" >/dev/null; then
 fi
 
 echo ""
-tput bold
+tput -T screen-256color bold
 echo "Done: TCAT installed"
-tput sgr0
+tput -T screen-256color sgr0
 echo ""
 
 echo "Please visit this TCAT installation at these URLs:"
