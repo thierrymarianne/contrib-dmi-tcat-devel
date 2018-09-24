@@ -1,6 +1,6 @@
 FROM ubuntu:16.04 
 
-RUN apt-get update && apt-get install openssl wget -fy
+RUN apt-get update && apt-get install openssl wget php-xdebug iputils-ping -fy
 
 RUN mkdir /etc/cron.d && touch /etc/crontab
 
