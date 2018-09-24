@@ -6,6 +6,16 @@ with debugging capabilities (xdebug extension being available by default).
 
 ![Analysis](/build/screenshots/DMI-twitter-capturing-and-analysis-toolset.png)
 
+## Requirements
+
+Clone the project after having installed [git](https://git-scm.org)
+
+```
+git clone https://github.com/thierrymarianne/dmi-tcat
+```
+
+Install [Docker](https://www.docker.com/get-started)
+
 ## Build
 
 Export your credentials as environment variables
