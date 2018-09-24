@@ -8,10 +8,10 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 build-image: ## Build docker image
-	@/bin/bash -c 'source ./scripts/build.sh'
+	@/bin/bash -c 'source ./provisioning/build.sh'
 
 get-interactive-shell: ## Get an interactive shell
-	@/bin/bash -c 'source ./scripts/exec.sh'
+	@/bin/bash -c 'source ./provisioning/exec.sh'
 
 run-container: ## Run container
-	@/bin/bash -c 'source ./scripts/run.sh'
+	@/bin/bash -c 'source ./provisioning/run.sh'
