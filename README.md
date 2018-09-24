@@ -4,6 +4,8 @@ The main purpose of this fork of https://github.com/digitalmethodsinitiative/dmi
 is to enable a maintainer to run a working development environment from a docker container
 with debugging capabilities (xdebug extension being available by default).
 
+![Analysis](/build/screenshots/DMI-twitter-capturing-and-analysis-toolset.png)
+
 ## Build
 
 Export your credentials as environment variables
