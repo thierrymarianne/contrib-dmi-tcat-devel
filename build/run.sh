@@ -12,6 +12,7 @@ command=`echo -n '/etc/init.d/apache2 start 2>&1 >> /dev/null && /etc/init.d/mys
 container_id=$(docker run -d -p 127.0.0.1:80:80 \
 -v `pwd`/build:/scripts \
 -v `pwd`/src:/var/www/dmi-tcat \
+-v `pwd`/templates/mods-available:/etc/php/7.0/mods-available \
 -v `pwd`/templates/apache2:/etc/php/7.0/apache2 \
 -v `pwd`/templates/cli:/etc/php/7.0/cli \
 -v `pwd`/volumes/mysql:/var/lib/mysql/twittercapture \
