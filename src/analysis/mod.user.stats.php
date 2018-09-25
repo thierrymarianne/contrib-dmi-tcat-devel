@@ -138,44 +138,6 @@ require_once __DIR__ . '/common/CSV.class.php'
         echo '<legend>User stats</legend>';
         echo '<p><a href="' . str_replace("#", urlencode("#"), str_replace("\"", "%22", $filename)) . '">' . $filename . '</a></p>';
         echo '</fieldset>';
-        /*
-          // interface language, user-defined location
-          $sql = "SELECT max(t.created_at), t.from_user_id, t.from_user_lang, t.location FROM " . $esc['mysql']['dataset'] . "_tweets t ";
-          $sql .= sqlSubset();
-          $sql .= "GROUP BY from_user_id";
-          $sqlresults = mysql_query($sql);
-          $locations = $languages = array();
-          while ($res = mysql_fetch_assoc($sqlresults)) {
-          $locations[] = $res['location'];
-          $languages[] = $res['from_user_lang'];
-          }
-
-          $locations = array_count_values($locations);
-          arsort($locations);
-          $contents = "location,frequency\n";
-          foreach ($locations as $location => $frequency)
-          $contents .= preg_replace("/[\r\n\s\t,]+/im", " ", trim($location)) . ",$frequency\n";
-
-          file_put_contents($filename_locations, chr(239) . chr(187) . chr(191) . $contents);
-
-          echo '<fieldset class="if_parameters">';
-          echo '<legend>Locations </legend>';
-          echo '<p><a href="' . str_replace("#", urlencode("#"), str_replace("\"", "%22", $filename_locations)) . '">' . $filename_locations . '</a></p>';
-          echo '</fieldset>';
-
-          $languages = array_count_values($languages);
-          arsort($languages);
-          $contents = "language,frequency\n";
-          foreach ($languages as $language => $frequency)
-          $contents .= preg_replace("/[\r\n\s\t]+/", "", $language) . ",$frequency\n";
-
-          file_put_contents($filename_languages, chr(239) . chr(187) . chr(191) . $contents);
-
-          echo '<fieldset class="if_parameters">';
-          echo '<legend>Languages </legend>';
-          echo '<p><a href="' . str_replace("#", urlencode("#"), str_replace("\"", "%22", $filename_languages)) . '">' . $filename_languages . '</a></p>';
-          echo '</fieldset>';
-         */
         ?>
 
     </body>
