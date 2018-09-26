@@ -65,3 +65,11 @@ Run a terminal from within the container
 ``` 
 make get-interactive-shell
 ```
+
+## Analysis
+
+```
+virtualenv deps
+. ./deps/bin/activate
+pip install -r requirements.txt
+```
