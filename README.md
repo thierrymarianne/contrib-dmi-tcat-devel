@@ -11,7 +11,7 @@ with debugging capabilities (xdebug extension being available by default).
 Clone the project after having installed [git](https://git-scm.org)
 
 ```
-git clone https://github.com/thierrymarianne/dmi-tcat
+git clone https://github.com/thierrymarianne/dmi-tcat --recursive
 ```
 
 Install [Docker](https://www.docker.com/get-started)
@@ -46,10 +46,10 @@ make build-image
 
 ## Use
 
-Configure the application after copying the configuration template
+Configure the application (by filling the blanks) after copying the configuration template
 
 ```
-cp dmi-tcat/config.php{.example,}
+cp src/config.php{.example,}
 ```
 
 Run a container from the aforementioned image
