@@ -58,6 +58,12 @@ Run a container from the aforementioned image
 make run-container
 ```
 
+Import dataset
+
+```
+export BIN=dataset && php import/import-jsondump.php
+```
+
 ## Run
 
 Run a terminal from within the container
