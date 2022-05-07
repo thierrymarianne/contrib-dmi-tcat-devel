@@ -1,3 +1,5 @@
+_*ARCHIVED*_ since the original project maintainers took care of supporting containerization.
+
 # DMI-TCAT in a Docker container
 
 The main purpose of this fork of https://github.com/digitalmethodsinitiative/dmi-tcat
