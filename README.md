@@ -13,7 +13,7 @@ with debugging capabilities (xdebug extension being available by default).
 Clone the project after having installed [git](https://git-scm.org)
 
 ```
-git clone https://github.com/thierrymarianne/dmi-tcat --recursive
+git clone git@github.com:thierrymarianne/contrib-dmi-tcat-devel.git --recursive
 ```
 
 Install [Docker](https://www.docker.com/get-started)
